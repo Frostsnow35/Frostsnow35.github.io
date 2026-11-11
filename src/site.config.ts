@@ -1,7 +1,9 @@
 export const site = {
   title: 'Frostsnow',
   tagline: 'Ce bas monde est le paradis unique.',
-  description: '计算机专业学生的技术笔记与随笔。',
+  description: '霜雪（Frostsnow）的技术笔记与随笔：操作系统、AI-infra、xv6 实验推导与日常记录。',
+  /** 首页收尾色带上的那句，只做展示，不参与 meta */
+  closing: '霜雪的技术笔记与随笔。',
   author: 'Frostsnow',
   /** 旧名与别名，供搜索引擎关联「霜雪 / frostsnow35」这类查询 */
   aliases: ['霜雪', '霜雪旧曾谙', 'frostsnow35'],

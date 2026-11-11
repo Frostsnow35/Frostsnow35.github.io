@@ -6,7 +6,7 @@ const year = new Date().getFullYear();
 <footer class="ft">
   <div class="wrap">
     <p class="line">
-      <span>© {year} {site.title}</span>
+      <span>© {year} {site.title}<span class="alias">（霜雪）</span></span>
       <span class="sep">·</span>
       <a class="link" href={site.github} target="_blank" rel="noopener">GitHub</a>
     </p>
@@ -29,5 +29,6 @@ const year = new Date().getFullYear();
     color: var(--faint);
   }
   .sep { opacity: 0.5; }
+  .alias { letter-spacing: 0; opacity: 0.92; }
   a:hover { color: var(--ink); }
 </style>
