@@ -10,10 +10,10 @@ export const site = {
 
   // 留言板：giscus（GitHub Discussions）
   giscus: {
-    repo: 'Frostsnow35/snow-blog',
-    repoId: '',
+    repo: 'Frostsnow35/Frostsnow35.github.io',
+    repoId: 'R_kgDOVqSySA',
     category: 'Announcements',
-    categoryId: '',
+    categoryId: 'DIC_kwDOVqSySM4DK3l_',
     mapping: 'pathname',
   },
 
@@ -27,7 +27,7 @@ export const site = {
   // 后台：纯前端直连 GitHub API，PAT 只存本机 localStorage
   admin: {
     owner: 'Frostsnow35',
-    repo: 'snow-blog',
+    repo: 'Frostsnow35.github.io',
     branch: 'main',
     postsDir: 'src/content/posts',
     imagesDir: 'public/images',
