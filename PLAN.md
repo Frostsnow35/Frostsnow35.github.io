@@ -133,9 +133,14 @@ giscus，数据存 GitHub Discussions。代价：留言者需 GitHub 账号。�
 
 ## 八、音乐
 
-`public/audio/eikyuu-hours.mp3`，`<audio loop muted autoplay>` 入站即起播（静音），监听首个 `pointerdown / keydown / wheel / scroll` 后 900ms 淡入到 0.4 音量。
+`public/audio/eikyuu-hours.mp3`，`<audio loop muted autoplay>` 入站即起播（静音），监听首个 `pointerdown / keydown / wheel / scroll` 后 700ms 淡入到记忆音量。
 
-带声自动播放会被 Chrome、Safari、iOS 静默拦截，代码不报错、音量恒为 0。静音起播 + 手势解锁是唯一稳的实现。右下角三根竖条点击可静音/恢复。
+带声自动播放会被 Chrome、Safari、iOS 静默拦截，代码不报错、音量恒为 0。静音起播 + 手势解锁是唯一稳的实现。
+
+**播放器全局化**：`Base.astro` 引入 `ClientRouter`（View Transitions），`Player` 根节点带 `transition:persist="player"`。换页时该 DOM 节点被整体搬移而非重建，`<audio>` 实例不变，`currentTime` 连续，不重头播。`Player` 的脚本用 `window.__bgmReady` 守卫，避免换页后重复绑定。
+
+音量：右下角一条 64px 细轨道，`localStorage` 记忆（`bgm.volume` / `bgm.muted`），拖到 0 视为静音；三根竖条点击切换静音。换页后音量与播放状态一并保留。
+
 
 ## 九、构建与部署
 

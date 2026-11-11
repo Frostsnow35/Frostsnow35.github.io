@@ -4,7 +4,6 @@ import { site } from '../site.config';
 
 <section class="field">
   <div class="center">
-    <p class="eyebrow hero-eyebrow">{site.eyebrow}</p>
     <h1 class="display hero-title">{site.title}</h1>
     <span class="dash" aria-hidden="true"></span>
     <p class="hero-tag">{site.tagline}</p>
@@ -14,7 +13,6 @@ import { site } from '../site.config';
     <svg width="14" height="18" viewBox="0 0 14 18" fill="none" aria-hidden="true">
       <path d="M7 1v14M2 10.5 7 15.5l5-5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    <span>滚动进入</span>
   </a>
 </section>
 
@@ -33,12 +31,6 @@ import { site } from '../site.config';
     text-align: center;
     padding: 0 var(--gutter);
     animation: settle 1.4s var(--ease) both;
-  }
-
-  .hero-eyebrow {
-    color: var(--hero-dim);
-    margin: 0 0 clamp(1rem, 3vw, 2.2rem);
-    animation: settle 1.2s var(--ease) 0.1s both;
   }
 
   .hero-title {
@@ -63,7 +55,8 @@ import { site } from '../site.config';
     margin: clamp(1rem, 2.4vw, 1.6rem) 0 0;
     font-family: var(--font-display);
     font-size: clamp(0.95rem, 1.5vw, 1.15rem);
-    letter-spacing: 0.22em;
+    letter-spacing: 0.16em;
+    text-wrap: balance;
     color: var(--hero-mid);
     animation: settle 1.3s var(--ease) 0.34s both;
   }
@@ -77,8 +70,6 @@ import { site } from '../site.config';
     align-items: center;
     gap: 0.55rem;
     color: var(--hero-dim);
-    font-size: 0.66rem;
-    letter-spacing: 0.34em;
     transform: translateX(-50%);
     transition: color 0.3s var(--ease);
     will-change: transform;
@@ -101,9 +92,11 @@ import { site } from '../site.config';
 </style>
 
 <script>
-  const hint = document.querySelector<HTMLElement>('.scroll');
-  const field = document.querySelector<HTMLElement>('.field');
-  if (hint && field) {
+  function initMagnet() {
+    const hint = document.querySelector<HTMLElement>('.scroll');
+    const field = document.querySelector<HTMLElement>('.field');
+    if (!hint || !field || field.dataset.magnet === '1') return;
+    field.dataset.magnet = '1';
     field.addEventListener('pointermove', (e) => {
       const r = hint.getBoundingClientRect();
       const dx = (e.clientX - (r.left + r.width / 2)) / 40;
@@ -116,4 +109,6 @@ import { site } from '../site.config';
       hint.style.transform = 'translateX(-50%)';
     });
   }
+  document.addEventListener('astro:page-load', initMagnet);
+  initMagnet();
 </script>

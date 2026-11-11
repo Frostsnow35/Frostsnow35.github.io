@@ -1,12 +1,11 @@
 export const site = {
-  title: '霜雪旧曾谙',
-  eyebrow: 'A MINIMALIST JOURNAL',
-  tagline: '把想留住的东西写下来',
+  title: 'Frostsnow',
+  tagline: 'Ce bas monde est le paradis unique.',
   description: '计算机专业学生的技术笔记与随笔。',
-  author: '霜雪旧曾谙',
+  author: 'Frostsnow',
   email: 'Silen_L@163.com',
   github: 'https://github.com/Frostsnow35',
-  startYear: 2025,
+  startYear: 2026,
 
   // 留言板：giscus（GitHub Discussions）
   giscus: {
@@ -17,7 +16,7 @@ export const site = {
     mapping: 'pathname',
   },
 
-  // 站点音乐：入站静音起播，首次交互后淡入
+  // 站点音乐：入站静音起播，首次交互后淡入到设定音量
   music: {
     src: '/audio/eikyuu-hours.mp3',
     title: 'eikyuu hours',

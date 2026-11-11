@@ -98,9 +98,11 @@ const isActive = (href: string) =>
 </style>
 
 <script>
+  // 事件委托：View Transitions 换页后按钮是新的，委托在 document 上不会失效
   const root = document.documentElement;
-  const btn = document.getElementById('theme-toggle');
-  btn?.addEventListener('click', () => {
+  document.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement)?.closest?.('#theme-toggle');
+    if (!btn) return;
     const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
     root.dataset.theme = next;
     try { localStorage.setItem('theme', next); } catch {}
