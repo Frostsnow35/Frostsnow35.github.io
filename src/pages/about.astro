@@ -49,7 +49,13 @@ import { site } from '../site.config';
 
         <div class="block reveal">
           <p class="label">此外</p>
-          <p>电影、足球、动漫、宅舞……我喜欢 STAR WARS ！。</p>
+          <p>电影、足球、动漫、宅舞……我喜欢 <strong class="sw">STAR WARS</strong>！</p>
+        </div>
+
+        <div class="block reveal">
+          <p class="label">旧站</p>
+          <p><a class="link" href={site.legacy} target="_blank" rel="noopener">霜雪旧曾谙 →</a></p>
+          <p class="aside">（欣赏它的前端就行，我永远爱着 Aqours）</p>
         </div>
 
         <div class="block reveal">
@@ -105,7 +111,7 @@ import { site } from '../site.config';
   .affil {
     margin: 0.95rem 0 0;
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: 0.86rem;
     letter-spacing: 0.12em;
     color: var(--hero-mid);
   }
@@ -139,24 +145,36 @@ import { site } from '../site.config';
   .label {
     margin: 0 0 0.7rem;
     font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-size: 0.82rem;
     letter-spacing: 0.18em;
     color: var(--orange);
   }
   .block p { margin: 0; line-height: 1.95; color: var(--ink); }
   .block p + p { margin-top: 0.8rem; }
+  .block .aside {
+    margin-top: 0.5rem;
+    font-size: 0.92rem;
+    line-height: 1.85;
+    color: var(--muted);
+  }
+
+  .sw {
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    color: var(--sw);
+  }
 
   .stack { margin: 0; }
   .line {
     display: grid;
-    grid-template-columns: 5.2rem 1fr;
+    grid-template-columns: 5.9rem 1fr;
     gap: 0.8rem;
     padding: 0.32rem 0;
   }
   .line + .line { border-top: 1px solid var(--line); }
   .line dt {
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: 0.86rem;
     letter-spacing: 0.1em;
     color: var(--faint);
     line-height: 1.9;
@@ -189,7 +207,7 @@ import { site } from '../site.config';
 
   @media (max-width: 560px) {
     .portrait { width: 80px; margin-left: 0.9rem; }
-    .affil { font-size: 0.66rem; letter-spacing: 0.08em; }
-    .line { grid-template-columns: 4.6rem 1fr; }
+    .affil { font-size: 0.8rem; letter-spacing: 0.08em; }
+    .line { grid-template-columns: 5.3rem 1fr; }
   }
 </style>

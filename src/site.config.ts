@@ -10,6 +10,8 @@ export const site = {
   email: 'Silen_L@163.com',
   github: 'https://github.com/Frostsnow35',
   bilibili: 'https://space.bilibili.com/454395506',
+  /** 旧站，仍在线，留在关于页做直达入口 */
+  legacy: 'https://frostsnow-blog.viddy.de5.net/home',
   startYear: 2026,
 
   // 留言板：giscus（GitHub Discussions）

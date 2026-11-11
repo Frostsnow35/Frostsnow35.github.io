@@ -23,6 +23,8 @@
   --hero-dim: rgba(20, 22, 26, 0.62);
   --hero-mid: rgba(20, 22, 26, 0.74);
   --hero-rule: rgba(20, 22, 26, 0.42);
+  /* 星球大战 logo 黄；亮色纸底上取其压深版，否则对比度不足 1.2 */
+  --sw: #b98600;
 
   --font-display: "Serif SC", "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", "Times New Roman", serif;
   --font-sans: "Inter", -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
@@ -49,6 +51,7 @@
   --hero-dim: rgba(244, 239, 230, 0.66);
   --hero-mid: rgba(244, 239, 230, 0.80);
   --hero-rule: rgba(244, 239, 230, 0.46);
+  --sw: #ffe81f;
 }
 
 /* ---------- reset ---------- */
@@ -87,8 +90,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 .eyebrow {
   font-family: var(--font-sans);
-  font-size: 0.68rem;
-  letter-spacing: 0.38em;
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--muted);
 }

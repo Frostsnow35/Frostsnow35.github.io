@@ -9,7 +9,17 @@ const ready = Boolean(site.giscus.repoId && site.giscus.categoryId);
   <section class="gb">
     <div class="wrap narrow">
       <h1 class="display headline">留言</h1>
-      <p class="intro">想说什么都行。用 GitHub 账号登录后即可写下。</p>
+      <p class="intro">想说什么都行。写下只需要三步。</p>
+
+      <ol class="steps">
+        <li><span class="n">01</span><p>点下面评论框右下角的「使用 GitHub 登录」，用 GitHub 账号授权一次。</p></li>
+        <li><span class="n">02</span><p>在输入框里写内容，支持 Markdown，可以先点「预览」看效果。</p></li>
+        <li><span class="n">03</span><p>点「发表评论」，页面刷新后就能看到。</p></li>
+      </ol>
+
+      <p class="alt">
+        没有 GitHub 账号，也可以直接写信给我：<a class="link" href={`mailto:${site.email}`}>{site.email}</a>，我读后会贴到评论区。
+      </p>
 
       {ready ? (
         <div class="giscus-wrap">
@@ -48,15 +58,41 @@ const ready = Boolean(site.giscus.repoId && site.giscus.categoryId);
     font-size: clamp(2.2rem, 6vw, 3.4rem);
   }
   .intro {
-    margin: 1.4rem 0 clamp(2.6rem, 6vw, 3.6rem);
+    margin: 1.4rem 0 1.6rem;
     color: var(--muted);
-    font-size: 0.95rem;
+    font-size: 1.02rem;
+  }
+  .steps {
+    margin: 0 0 clamp(1.8rem, 4vw, 2.4rem);
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .steps li {
+    display: grid;
+    grid-template-columns: 2.2rem 1fr;
+    gap: 0.6rem;
+    align-items: baseline;
+  }
+  .steps .n {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--orange);
+  }
+  .steps p { margin: 0; font-size: 0.98rem; line-height: 1.85; color: var(--ink); }
+  .alt {
+    margin: 0 0 clamp(2.2rem, 5vw, 3rem);
+    font-size: 0.92rem;
+    line-height: 1.85;
+    color: var(--muted);
   }
   .giscus-wrap { min-height: 12rem; }
   .pending {
     padding: 1.4rem 1.5rem;
     background: var(--sea-wash);
-    font-size: 0.9rem;
+    font-size: 0.98rem;
     line-height: 1.9;
     color: var(--muted);
   }

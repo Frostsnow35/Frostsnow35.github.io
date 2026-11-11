@@ -37,6 +37,27 @@ const isActive = (href: string) =>
   }
   .nav > * { pointer-events: auto; }
 
+  /* 滚过色场后给导航压一层纸色渐隐，避免正文从导航字后面穿过；
+     还压在色场上时不出现，否则顶部会多出一条纸白band */
+  .nav::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: calc(100% + 1.4rem);
+    z-index: -1;
+    background: linear-gradient(
+      to bottom,
+      var(--paper) 0%,
+      var(--paper) 58%,
+      color-mix(in srgb, var(--paper) 55%, transparent) 82%,
+      transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 0.45s var(--ease);
+    pointer-events: none;
+  }
+  .nav.scrolled::before { opacity: 1; }
+
   .links {
     display: flex;
     align-items: center;
@@ -45,7 +66,7 @@ const isActive = (href: string) =>
 
   .nav-link {
     position: relative;
-    font-size: 0.8rem;
+    font-size: 0.92rem;
     letter-spacing: 0.12em;
     color: var(--muted);
     transition: color 0.3s var(--ease);
@@ -84,7 +105,7 @@ const isActive = (href: string) =>
   :global([data-theme="dark"]) .theme .dot { background: var(--ink); }
 
   @media (max-width: 640px) {
-    .nav-link { font-size: 0.75rem; letter-spacing: 0.08em; }
+    .nav-link { font-size: 0.86rem; letter-spacing: 0.08em; }
     .links { gap: 0.9rem; }
   }
 </style>
@@ -92,6 +113,7 @@ const isActive = (href: string) =>
 <script>
   // 事件委托：View Transitions 换页后按钮是新的，委托在 document 上不会失效
   const root = document.documentElement;
+  // 事件委托：View Transitions 换页后按钮是新的，委托在 document 上不会失效
   document.addEventListener('click', (e) => {
     const btn = (e.target as HTMLElement)?.closest?.('#theme-toggle');
     if (!btn) return;
@@ -99,4 +121,36 @@ const isActive = (href: string) =>
     root.dataset.theme = next;
     try { localStorage.setItem('theme', next); } catch {}
   });
+  // 滚动过色场留白后给导航压纸色底；换页后 nav 是新节点，每次 page-load 重新对齐状态
+  let scrolled: boolean | null = null;
+  function syncNav() {
+    const navEl = document.querySelector('.nav');
+    if (!navEl) return;
+    const field = document.querySelector('.field');
+    // 有色场的页面（首页 / 关于）要等色场整个滚过去再上底色
+    const gate = field
+      ? (field as HTMLElement).offsetHeight - 72
+      : 24;
+    const on = window.scrollY > Math.max(gate, 24);
+    if (on === scrolled) return;
+    scrolled = on;
+    navEl.classList.toggle('scrolled', on);
+  }
+  document.addEventListener('astro:page-load', () => {
+    scrolled = null;
+    syncNav();
+  });
+  let raf = 0;
+  addEventListener(
+    'scroll',
+    () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        syncNav();
+      });
+    },
+    { passive: true }
+  );
+  syncNav();
 </script>
