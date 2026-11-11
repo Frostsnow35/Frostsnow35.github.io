@@ -175,9 +175,10 @@ def main() -> int:
 
     title = issue["title"].strip()
     body = (issue.get("body") or "").strip()
-    # 统一成东八区，否则 UTC 凌晨写的文章会显示成前一天
+    # 写成东八区的裸时间（不带时区）：构建机在 UTC，带时区会被再转一次，
+    # 凌晨写的文章就会显示成前一天
     created = datetime.fromisoformat(issue["created_at"].replace("Z", "+00:00"))
-    date = created.astimezone(timezone(timedelta(hours=8))).isoformat()
+    date = created.astimezone(timezone(timedelta(hours=8))).strftime("%Y-%m-%dT%H:%M:%S")
 
     # 正文首行可选的 slug 指令
     slug = ""
