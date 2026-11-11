@@ -25,6 +25,8 @@ jobs:
       (contains(github.event.issue.labels.*.name, '发布') &&
       github.event.issue.user.login == github.repository_owner)
     runs-on: ubuntu-latest
+    outputs:
+      changes: ${{ steps.commit.outputs.changes }}
     steps:
       - uses: actions/checkout@v4
 
@@ -78,3 +80,32 @@ jobs:
           gh issue comment "$ISSUE" --repo "${{ github.repository }}" --body "$MSG"
           gh issue edit "$ISSUE" --repo "${{ github.repository }}" --add-label "已发布"
           gh issue close "$ISSUE" --repo "${{ github.repository }}"
+
+  # 机器人用 GITHUB_TOKEN 提交的 push 不会触发 deploy.yml，
+  # 所以这里自己构建并发布一次，否则文章要等下一次人工推送才上线
+  deploy:
+    needs: publish
+    if: needs.publish.outputs.changes == '1'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deployment
+        uses: actions/deploy-pages@v4
