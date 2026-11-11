@@ -5,35 +5,76 @@ import { site } from '../site.config';
 
 <Base title="关于">
   <header class="field">
-    <div class="wrap">
-      <h1 class="display name">{site.author}</h1>
+    <div class="wrap head">
+      <div class="id">
+        <h1 class="display name">{site.author}</h1>
+        <p class="affil">华南师范大学 · 操作系统 / 人工智能 / AI-infra</p>
+      </div>
     </div>
   </header>
 
   <section class="body">
     <div class="wrap">
       <div class="col">
-      <p class="lead">
-        计算机专业学生，写系统的实验笔记，也写一点想起来就记下的东西。
-      </p>
+        <div class="intro">
+          <img class="portrait" src="/avatar.jpg" alt="Frostsnow 的头像" width="540" height="540" />
+          <p class="lead">
+            写系统实验的笔记，也写一点想起来就记下的东西。
+          </p>
+        </div>
 
-      <div class="block reveal">
-        <p class="label">现在</p>
-        <p>在读计算机科学与技术，主要折腾操作系统与系统编程，xv6 的实验记录都在 <a class="link" href="/posts/">文章</a> 里。</p>
-      </div>
+        <div class="block reveal">
+          <p class="label">技术栈</p>
+          <dl class="stack">
+            <div class="line">
+              <dt>语言</dt>
+              <dd>Python · C++</dd>
+            </div>
+            <div class="line">
+              <dt>正在学</dt>
+              <dd>Rust · AI-infra · 分布式系统</dd>
+            </div>
+          </dl>
+        </div>
 
-      <div class="block reveal">
-        <p class="label">这里写什么</p>
-        <p>课程实验的完整推导、踩过的坑、以及偶尔的随笔。不追热点，不给结论加滤镜，做不出来就写做不出来。</p>
-      </div>
+        <div class="block reveal">
+          <p class="label">代码</p>
+          <p>项目都在 <a class="link" href={site.github} target="_blank" rel="noopener">GitHub 主页</a>，仓库公开。</p>
+        </div>
 
-      <div class="block reveal">
-        <p class="label">联系</p>
-        <p>
-          <a class="link" href={`mailto:${site.email}`}>{site.email}</a><br />
-          <a class="link" href={site.github} target="_blank" rel="noopener">github.com/Frostsnow35</a>
-        </p>
-      </div>
+        <div class="block reveal">
+          <p class="label">这里写什么</p>
+          <p>课程实验的完整推导、踩过的坑、以及偶尔的随笔。不追热点，不给结论加滤镜，做不出来就写做不出来。</p>
+        </div>
+
+        <div class="block reveal">
+          <p class="label">此外</p>
+          <p>电影、足球、动漫、宅舞。</p>
+        </div>
+
+        <div class="block reveal">
+          <p class="label">联系</p>
+          <div class="social">
+            <a class="icon" href={`mailto:${site.email}`} aria-label="邮箱" title={site.email}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="2.6" y="5.4" width="18.8" height="13.2" rx="2.4" stroke="currentColor" stroke-width="1.4" />
+                <path d="M3.4 6.9 12 12.7l8.6-5.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </a>
+            <a class="icon" href={site.github} target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+              <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M12 .5C5.73.5.5 5.73.5 12c0 5.02 3.26 9.28 7.78 10.79.57.1.78-.25.78-.55v-1.9c-3.17.69-3.84-1.53-3.84-1.53-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.75 1.18 1.75 1.18 1.02 1.75 2.68 1.24 3.33.95.1-.74.4-1.24.72-1.53-2.53-.29-5.19-1.27-5.19-5.64 0-1.25.44-2.27 1.17-3.07-.12-.29-.51-1.45.11-3.02 0 0 .96-.31 3.14 1.17a10.9 10.9 0 0 1 5.72 0c2.18-1.48 3.14-1.17 3.14-1.17.62 1.57.23 2.73.11 3.02.73.8 1.17 1.82 1.17 3.07 0 4.38-2.67 5.35-5.21 5.63.41.36.78 1.06.78 2.14v3.17c0 .3.21.66.79.55A11.5 11.5 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z" />
+              </svg>
+            </a>
+            <a class="icon" href={site.bilibili} target="_blank" rel="noopener" aria-label="哔哩哔哩" title="哔哩哔哩">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6.6 2.7 9.4 5.6M17.4 2.7 14.6 5.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                <rect x="2.6" y="5.6" width="18.8" height="15" rx="3.2" stroke="currentColor" stroke-width="1.4" />
+                <path d="M8 11.6v3.2M16 11.6v3.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -41,24 +82,53 @@ import { site } from '../site.config';
 
 <style>
   .field {
-    min-height: 46vh;
+    min-height: 48vh;
     display: flex;
     align-items: flex-end;
     background: var(--field);
     color: var(--hero-ink);
     padding-bottom: clamp(2.2rem, 6vw, 3.6rem);
   }
+
+  .head {
+    display: flex;
+    align-items: flex-end;
+    gap: clamp(1.4rem, 4vw, 3rem);
+  }
+  .id { min-width: 0; }
   .name {
     margin: 0;
-    font-size: clamp(2.2rem, 7vw, 4.2rem);
+    font-size: clamp(2.2rem, 6.6vw, 4.1rem);
     letter-spacing: 0.05em;
+    line-height: 1;
+  }
+  .affil {
+    margin: 0.95rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--hero-mid);
   }
 
   .body { padding: clamp(3.5rem, 9vh, 6rem) 0 clamp(4rem, 10vh, 7rem); }
   .col { max-width: 40rem; }
 
+  .intro {
+    overflow: hidden;
+    margin-bottom: clamp(2.6rem, 6vw, 3.6rem);
+  }
+
+  .portrait {
+    float: right;
+    width: clamp(96px, 13vw, 126px);
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    margin: 0.45rem 0 1rem clamp(1rem, 3vw, 1.8rem);
+  }
+
   .lead {
-    margin: 0 0 clamp(3rem, 7vw, 4.5rem);
+    margin: 0;
     font-family: var(--font-display);
     font-size: clamp(1.2rem, 2.6vw, 1.55rem);
     line-height: 1.85;
@@ -75,4 +145,51 @@ import { site } from '../site.config';
   }
   .block p { margin: 0; line-height: 1.95; color: var(--ink); }
   .block p + p { margin-top: 0.8rem; }
+
+  .stack { margin: 0; }
+  .line {
+    display: grid;
+    grid-template-columns: 5.2rem 1fr;
+    gap: 0.8rem;
+    padding: 0.32rem 0;
+  }
+  .line + .line { border-top: 1px solid var(--line); }
+  .line dt {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--faint);
+    line-height: 1.9;
+  }
+  .line dd {
+    margin: 0;
+    line-height: 1.9;
+    color: var(--ink);
+  }
+
+  .social {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    margin-top: 0.5rem;
+  }
+  .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+    color: var(--muted);
+    transition: color 0.3s var(--ease), transform 0.3s var(--ease);
+  }
+  .icon:hover,
+  .icon:focus-visible {
+    color: var(--orange);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 560px) {
+    .portrait { width: 80px; margin-left: 0.9rem; }
+    .affil { font-size: 0.66rem; letter-spacing: 0.08em; }
+    .line { grid-template-columns: 4.6rem 1fr; }
+  }
 </style>

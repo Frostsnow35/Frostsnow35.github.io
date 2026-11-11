@@ -5,6 +5,7 @@ export const site = {
   author: 'Frostsnow',
   email: 'Silen_L@163.com',
   github: 'https://github.com/Frostsnow35',
+  bilibili: 'https://space.bilibili.com/454395506',
   startYear: 2026,
 
   // 留言板：giscus（GitHub Discussions）
