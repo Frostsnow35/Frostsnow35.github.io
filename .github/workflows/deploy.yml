@@ -38,3 +38,12 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # 部署完成后把 sitemap 里的 URL 主动推给 IndexNow（Bing / Yandex / Naver / Seznam）
+  notify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Submit URLs to IndexNow
+        run: python3 scripts/indexnow.py

@@ -10,10 +10,62 @@ interface Props {
   title?: string;
   description?: string;
   bare?: boolean;
+  /** website（默认）或 article */
+  type?: 'website' | 'article';
+  /** 分享图，缺省用站级 og.png */
+  image?: string;
+  noindex?: boolean;
+  /** 文章发布时间，仅 type=article 时输出 */
+  published?: Date;
+  section?: string;
+  /** 页面级结构化数据，站级 WebSite / Person 由布局统一注入 */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
-const { title, description = site.description, bare = false } = Astro.props;
+const {
+  title,
+  description = site.description,
+  bare = false,
+  type = 'website',
+  image = '/og.png',
+  noindex = false,
+  published,
+  section,
+  jsonLd,
+} = Astro.props;
+
 const pageTitle = title ? `${title} · ${site.title}` : `${site.title} · ${site.tagline}`;
-const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://frostsnow35.github.io');
+const base = (Astro.site ?? new URL('https://frostsnow35.github.io')).href;
+const canonical = new URL(Astro.url.pathname, base);
+const ogImage = new URL(image, base);
+const feed = new URL('/feed.xml', base);
+
+const siteGraph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': new URL('/#website', base).href,
+      url: base,
+      name: site.title,
+      alternateName: [...site.aliases],
+      description: site.description,
+      inLanguage: 'zh-CN',
+      publisher: { '@id': new URL('/#person', base).href },
+    },
+    {
+      '@type': 'Person',
+      '@id': new URL('/#person', base).href,
+      name: site.author,
+      alternateName: [...site.aliases],
+      url: base,
+      email: `mailto:${site.email}`,
+      description: site.description,
+      sameAs: [site.github, site.bilibili],
+      knowsAbout: ['操作系统', '人工智能', 'AI-infra', 'Rust', 'C++', 'Python'],
+    },
+  ],
+};
+const graphs = [siteGraph, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [])];
 ---
 
 <!doctype html>
@@ -23,14 +75,37 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://frostsnow35
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    <meta name="author" content={site.author} />
+    {noindex
+      ? <meta name="robots" content="noindex,nofollow" />
+      : <meta name="robots" content="index,follow,max-image-preview:large" />}
     <link rel="canonical" href={canonical} />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link rel="alternate" type="application/rss+xml" title={site.title} href={feed} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={site.title} />
+    <meta property="og:locale" content="zh_CN" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={site.title} />
+    {published && <meta property="article:published_time" content={published.toISOString()} />}
+    {section && <meta property="article:section" content={section} />}
+    {type === 'article' && <meta property="article:author" content={site.author} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
     <meta name="theme-color" content="#f5811f" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <ClientRouter />
     <link rel="preload" href="/fonts/serif-sc.woff2" as="font" type="font/woff2" crossorigin />
+    {graphs.map((g) => <script type="application/ld+json" set:html={JSON.stringify(g)} />)}
     <script is:inline>
       (function () {
         try {

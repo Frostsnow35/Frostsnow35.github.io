@@ -32,3 +32,15 @@ python scripts/build_font.py <字体.otf>  # 按实际用字重做字体子集
 ## 部署
 
 推 `main` 触发 `.github/workflows/deploy.yml`。仓库名必须是 `Frostsnow35.github.io` 才能拿到根域名。
+
+## 搜索引擎
+
+| 产出 | 来源 |
+|---|---|
+| `/sitemap.xml` | `src/pages/sitemap.xml.ts`，文章按 `date` 写 lastmod |
+| `/feed.xml` | `src/pages/feed.xml.ts`，RSS 2.0 |
+| `/og.png` | `python scripts/build_og.py`，1200×630 分享图 |
+| 结构化数据 | `Base.astro` 注入 WebSite + Person，文章页追加 BlogPosting + BreadcrumbList |
+| 主动推送 | 部署后 `notify` job 跑 `scripts/indexnow.py`，推给 IndexNow（Bing / Yandex / Naver） |
+
+Google 与百度不认 IndexNow：Google 靠 sitemap + 内链自然抓取，百度需在站长平台单独提交（github.io 在中国大陆可抓性差，属已知限制）。

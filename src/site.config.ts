@@ -3,6 +3,8 @@ export const site = {
   tagline: 'Ce bas monde est le paradis unique.',
   description: '计算机专业学生的技术笔记与随笔。',
   author: 'Frostsnow',
+  /** 旧名与别名，供搜索引擎关联「霜雪 / frostsnow35」这类查询 */
+  aliases: ['霜雪', '霜雪旧曾谙', 'frostsnow35'],
   email: 'Silen_L@163.com',
   github: 'https://github.com/Frostsnow35',
   bilibili: 'https://space.bilibili.com/454395506',
