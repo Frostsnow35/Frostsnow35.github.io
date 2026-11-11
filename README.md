@@ -12,9 +12,20 @@ npm run build      # 产物在 dist/
 
 ## 写文章
 
-浏览器打开 `/admin/`，填一次 GitHub PAT（fine-grained，只勾本仓库 Contents 读写）即可新建、编辑、传图。提交后 Actions 自动重建。
+**主路径：开一条 issue。** 新建 issue，标题即文章标题，正文写 Markdown，图片直接拖进去；打上 `发布` 标签后 `.github/workflows/publish.yml` 会把它转成 `src/content/posts/<slug>.md`、把图片抓进 `public/images/posts/<slug>/`、提交并回执链接，最后关掉 issue。
 
-也可以直接在 `src/content/posts/` 写 Markdown，frontmatter 见 `PLAN.md`。
+| 想控制什么 | 怎么写 |
+|---|---|
+| 文件名 | 正文第一行写 `slug: xv6-cow`；不写则用标题转写，转不出英文时用 `issue-<编号>` |
+| 分类 | 打 `分类:技术` / `分类:随笔` 这类标签，冒号后即 category；都不打则「随笔」 |
+| 标签 | 其余标签直接进 `tags`，例如 `xv6`、`os` |
+| 摘要 | 默认取正文第一段前 70 字 |
+| 阅读时长 | 中文 350 字/分钟估算，自动算 |
+| 日期 | 取 issue 创建时间（东八区） |
+
+已发布的 issue 改完正文再存一次，会按同一 slug 覆盖原文件；想改文件名就在正文首行改 `slug`。
+
+备选：直接在 `src/content/posts/` 写 Markdown（frontmatter 见 `PLAN.md`），或用 `/admin/`（需要 fine-grained PAT）。
 
 ## 改站点信息
 

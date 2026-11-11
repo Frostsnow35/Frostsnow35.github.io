@@ -1,0 +1,80 @@
+name: 发布文章（Issue）
+
+on:
+  issues:
+    types: [opened, labeled, edited]
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Issue 编号（补发或重跑）
+        required: true
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: publish-issue-${{ github.event.issue.number || inputs.issue }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    # 只有仓库本人开的、且带「发布」标签的 issue 才会落到仓库里
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (contains(github.event.issue.labels.*.name, '发布') &&
+      github.event.issue.user.login == github.repository_owner)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 解析 issue
+        id: build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE: ${{ github.event.issue.number || inputs.issue }}
+          SLUG_FILE: ${{ runner.temp }}/slug.txt
+        run: |
+          python scripts/issue_to_post.py
+          if [ -f "$SLUG_FILE" ]; then
+            echo "slug=$(cat "$SLUG_FILE")" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 提交
+        id: commit
+        env:
+          ISSUE: ${{ github.event.issue.number || inputs.issue }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "changes=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "post: issue #$ISSUE"
+          git push
+          echo "changes=1" >> "$GITHUB_OUTPUT"
+
+      - name: 回执并收口
+        if: steps.build.outputs.slug != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ github.event.issue.number || inputs.issue }}
+          SLUG: ${{ steps.build.outputs.slug }}
+          CHANGES: ${{ steps.commit.outputs.changes }}
+        run: |
+          URL="https://frostsnow35.github.io/posts/$SLUG/"
+          if [ "$CHANGES" = "1" ]; then
+            MSG="已发布：$URL （构建约 1 分钟）"
+          else
+            MSG="内容没有变化，未产生新提交。$URL"
+          fi
+          gh issue comment "$ISSUE" --repo "${{ github.repository }}" --body "$MSG"
+          gh issue edit "$ISSUE" --repo "${{ github.repository }}" --add-label "已发布"
+          gh issue close "$ISSUE" --repo "${{ github.repository }}"
