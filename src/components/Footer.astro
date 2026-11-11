@@ -1,0 +1,35 @@
+---
+import { site } from '../site.config';
+const year = new Date().getFullYear();
+---
+
+<footer class="ft">
+  <div class="wrap">
+    <p class="line">
+      <span>© {site.startYear}–{year} {site.author}</span>
+      <span class="sep">·</span>
+      <a class="link" href={`mailto:${site.email}`}>{site.email}</a>
+      <span class="sep">·</span>
+      <a class="link" href={site.github} target="_blank" rel="noopener">GitHub</a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .ft {
+    padding: 5rem var(--gutter) 3.5rem;
+  }
+  .line {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--faint);
+  }
+  .sep { opacity: 0.5; }
+  a:hover { color: var(--ink); }
+</style>

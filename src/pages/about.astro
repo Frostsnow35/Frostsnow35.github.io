@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site.config';
+---
+
+<Base title="关于">
+  <header class="field">
+    <div class="wrap">
+      <p class="eyebrow">ABOUT</p>
+      <h1 class="display name">{site.author}</h1>
+    </div>
+  </header>
+
+  <section class="body">
+    <div class="wrap">
+      <div class="col">
+      <p class="lead">
+        计算机专业学生，写系统的实验笔记，也写一点想起来就记下的东西。
+      </p>
+
+      <div class="block reveal">
+        <p class="label">现在</p>
+        <p>在读计算机科学与技术，主要折腾操作系统与系统编程，xv6 的实验记录都在 <a class="link" href="/posts/">文章</a> 里。</p>
+      </div>
+
+      <div class="block reveal">
+        <p class="label">这里写什么</p>
+        <p>课程实验的完整推导、踩过的坑、以及偶尔的随笔。不追热点，不给结论加滤镜，做不出来就写做不出来。</p>
+      </div>
+
+      <div class="block reveal">
+        <p class="label">联系</p>
+        <p>
+          <a class="link" href={`mailto:${site.email}`}>{site.email}</a><br />
+          <a class="link" href={site.github} target="_blank" rel="noopener">github.com/Frostsnow35</a>
+        </p>
+      </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .field {
+    min-height: 46vh;
+    display: flex;
+    align-items: flex-end;
+    background: var(--field);
+    color: #14161a;
+    padding-bottom: clamp(2.2rem, 6vw, 3.6rem);
+  }
+  .field .eyebrow { color: rgba(20, 22, 26, 0.62); margin: 0 0 1rem; }
+  .name {
+    margin: 0;
+    font-size: clamp(2.2rem, 7vw, 4.2rem);
+    letter-spacing: 0.05em;
+  }
+
+  .body { padding: clamp(3.5rem, 9vh, 6rem) 0 clamp(4rem, 10vh, 7rem); }
+  .col { max-width: 40rem; }
+
+  .lead {
+    margin: 0 0 clamp(3rem, 7vw, 4.5rem);
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 2.6vw, 1.55rem);
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+  }
+
+  .block + .block { margin-top: clamp(2.2rem, 5vw, 3.2rem); }
+  .label {
+    margin: 0 0 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    color: var(--orange);
+  }
+  .block p { margin: 0; line-height: 1.95; color: var(--ink); }
+  .block p + p { margin-top: 0.8rem; }
+</style>

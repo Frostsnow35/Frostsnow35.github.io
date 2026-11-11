@@ -1,0 +1,54 @@
+---
+import { site, nav } from '../site.config';
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Player from '../components/Player.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  bare?: boolean;
+}
+const { title, description = site.description, bare = false } = Astro.props;
+const pageTitle = title ? `${title} · ${site.title}` : `${site.title} · ${site.tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://frostsnow35.github.io');
+---
+
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#f5811f" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/serif-sc.woff2" as="font" type="font/woff2" crossorigin />
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t) document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class={bare ? 'is-bare' : ''}>
+    <Nav />
+    <main>
+      <slot />
+    </main>
+    {!bare && <Footer />}
+    <Player />
+  </body>
+</html>
+
+<style is:global>
+  main { display: block; }
+  body.is-bare main { padding-top: 0; }
+</style>

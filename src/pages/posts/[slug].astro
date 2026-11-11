@@ -1,0 +1,222 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const all = (await getCollection('posts')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+const idx = all.findIndex((p) => p.id === post.id);
+const prev = all[idx + 1];
+const next = all[idx - 1];
+
+const fmt = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+---
+
+<Base title={post.data.title} description={post.data.excerpt}>
+  <article class="article">
+    <header class="hero">
+      <div class="wrap narrow">
+        <a class="back" href="/posts/">← 文章</a>
+        <p class="eyebrow meta-line">
+          {post.data.category}
+          <span class="dot">·</span>{fmt(post.data.date)}
+          <span class="dot">·</span>{post.data.readTime} min
+        </p>
+        <h1 class="display headline">{post.data.title}</h1>
+      </div>
+    </header>
+
+    <div class="wrap narrow">
+      <div class="prose">
+        <Content />
+      </div>
+
+      <nav class="pager">
+        {prev && (
+          <a class="pager-item" href={`/posts/${prev.id}/`}>
+            <span class="pager-label">上一篇</span>
+            <span class="pager-title">{prev.data.title}</span>
+          </a>
+        )}
+        {next && (
+          <a class="pager-item right" href={`/posts/${next.id}/`}>
+            <span class="pager-label">下一篇</span>
+            <span class="pager-title">{next.data.title}</span>
+          </a>
+        )}
+      </nav>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .narrow { max-width: 46rem; }
+
+  .hero { padding: clamp(7rem, 16vh, 11rem) 0 clamp(2.5rem, 6vw, 4rem); }
+
+  .back {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--faint);
+    margin-bottom: clamp(1.6rem, 4vw, 2.6rem);
+    transition: color 0.3s var(--ease);
+  }
+  .back:hover { color: var(--ink); }
+
+  .meta-line { margin: 0 0 1.1rem; font-family: var(--font-mono); letter-spacing: 0.1em; }
+  .meta-line .dot { margin: 0 0.55em; opacity: 0.6; }
+
+  .headline {
+    margin: 0;
+    font-size: clamp(1.9rem, 4.6vw, 3.1rem);
+    line-height: 1.28;
+    letter-spacing: 0.01em;
+  }
+</style>
+
+<style is:global>
+  .prose {
+    font-size: 1.02rem;
+    line-height: 1.95;
+    color: var(--ink);
+    padding-bottom: clamp(3rem, 8vh, 5rem);
+  }
+  .prose > * + * { margin-top: 1.35em; }
+  .prose > :first-child { margin-top: 0; }
+
+  .prose h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    margin-top: 3.2em;
+    letter-spacing: 0.01em;
+  }
+  .prose h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.18rem;
+    margin-top: 2.4em;
+    color: var(--ink);
+  }
+  .prose h2 + *,
+  .prose h3 + * { margin-top: 0.9em; }
+
+  .prose p { margin: 0; }
+  .prose strong { font-weight: 600; }
+  .prose em { font-style: italic; }
+
+  .prose a {
+    color: var(--ink);
+    background-image: linear-gradient(var(--orange), var(--orange));
+    background-repeat: no-repeat;
+    background-size: 100% 1px;
+    background-position: 0 100%;
+    transition: background-size 0.3s var(--ease), color 0.3s var(--ease);
+  }
+  .prose a:hover { color: var(--orange); }
+
+  .prose ul, .prose ol { padding-left: 1.25em; margin: 0; }
+  .prose li + li { margin-top: 0.4em; }
+  .prose li::marker { color: var(--faint); }
+
+  .prose blockquote {
+    margin: 2em 0;
+    padding: 1.1rem 1.4rem;
+    background: var(--sea-wash);
+    color: var(--ink);
+  }
+  .prose blockquote p { margin: 0; }
+  .prose blockquote > * + * { margin-top: 0.8em; }
+
+  .prose hr {
+    border: 0;
+    height: 1px;
+    background: var(--line);
+    margin: 3rem 0;
+  }
+
+  .prose img { margin: 2em 0; }
+
+  .prose :not(pre) > code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    padding: 0.15em 0.4em;
+    background: var(--sea-wash);
+    color: var(--ink);
+    border-radius: 0;
+  }
+
+  .prose pre {
+    margin: 1.8em 0;
+    padding: 1.1rem 1.25rem;
+    overflow-x: auto;
+    background: var(--sea-wash) !important;
+    border-left: 1px solid var(--sea-line);
+    font-size: 0.84rem;
+    line-height: 1.75;
+  }
+  .prose pre code {
+    font-family: var(--font-mono);
+    background: none;
+    padding: 0;
+    font-size: inherit;
+  }
+  .prose pre code span {
+    color: var(--shiki-light);
+  }
+  :global([data-theme="dark"]) .prose pre code span {
+    color: var(--shiki-dark);
+  }
+
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  .prose th, .prose td {
+    text-align: left;
+    padding: 0.55em 0.7em;
+    border-bottom: 1px solid var(--line);
+  }
+  .prose th { font-weight: 500; color: var(--muted); }
+</style>
+
+<style>
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: clamp(2rem, 5vw, 3rem) 0 clamp(4rem, 10vh, 6rem);
+    border-top: 1px solid var(--line);
+  }
+  .pager-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 45%;
+  }
+  .pager-item.right { text-align: right; margin-left: auto; }
+  .pager-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: var(--faint);
+  }
+  .pager-title {
+    font-family: var(--font-display);
+    font-size: 0.98rem;
+    transition: color 0.3s var(--ease);
+  }
+  .pager-item:hover .pager-title { color: var(--orange); }
+</style>

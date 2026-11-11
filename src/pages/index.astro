@@ -1,0 +1,108 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import PostRow from '../components/PostRow.astro';
+import { site } from '../site.config';
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+---
+
+<Base bare>
+  <Hero />
+
+  <section id="posts" class="posts">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">WRITINGS</p>
+        <p class="count">{posts.length} 篇</p>
+      </div>
+
+      <div class="list">
+        {posts.map((post, i) => (
+          <PostRow
+            href={`/posts/${post.id}/`}
+            title={post.data.title}
+            excerpt={post.data.excerpt}
+            date={post.data.date}
+            category={post.data.category}
+            readTime={post.data.readTime}
+            index={i + 1}
+          />
+        ))}
+      </div>
+
+      <a class="more link" href="/posts/">按时间归档 →</a>
+    </div>
+  </section>
+
+  <section class="sea band">
+    <div class="wrap band-inner reveal">
+      <div class="band-text">
+        <p class="eyebrow">ABOUT</p>
+        <p class="band-line">
+          {site.description}
+        </p>
+      </div>
+      <a class="band-link link" href="/about/">关于我 →</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .posts { padding: clamp(5rem, 12vh, 9rem) 0 clamp(3rem, 8vh, 6rem); }
+
+  .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: clamp(1.4rem, 3vw, 2.2rem);
+  }
+  .count {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--faint);
+  }
+
+  .more {
+    display: inline-block;
+    margin-top: clamp(2.2rem, 5vw, 3.4rem);
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+  .more:hover { color: var(--ink); }
+
+  .band { padding: clamp(4.5rem, 10vh, 7rem) 0; }
+  .band-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .band-line {
+    margin: 1rem 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.6rem);
+    line-height: 1.65;
+    max-width: 30rem;
+    letter-spacing: 0.02em;
+  }
+  .band-link {
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .band-link:hover { color: var(--ink); }
+
+  @media (max-width: 560px) {
+    .band-inner { align-items: flex-start; }
+  }
+</style>

@@ -1,0 +1,108 @@
+---
+import { site, nav } from '../site.config';
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
+---
+
+<header class="nav">
+  <a class="brand" href="/">{site.title}</a>
+  <nav class="links" aria-label="主导航">
+    {nav.map((item) => (
+      <a
+        href={item.href}
+        class:list={['nav-link', { active: isActive(item.href) }]}
+      >
+        {item.label}
+      </a>
+    ))}
+    <button id="theme-toggle" class="theme" aria-label="切换主题" title="切换主题">
+      <span class="dot"></span>
+    </button>
+  </nav>
+</header>
+
+<style>
+  .nav {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.35rem var(--gutter);
+    color: var(--ink);
+    mix-blend-mode: normal;
+    pointer-events: none;
+  }
+  .nav > * { pointer-events: auto; }
+
+  .brand {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    letter-spacing: 0.14em;
+  }
+
+  .links {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2.4vw, 2rem);
+  }
+
+  .nav-link {
+    position: relative;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    transition: color 0.3s var(--ease);
+  }
+  .nav-link:hover { color: var(--ink); }
+  .nav-link.active { color: var(--ink); }
+  .nav-link.active::before {
+    content: "";
+    position: absolute;
+    left: -0.7em;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    margin-top: -2px;
+    border-radius: 50%;
+    background: var(--orange);
+  }
+
+  .theme {
+    display: grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+  }
+  .theme .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1px solid var(--ink);
+    background: transparent;
+    transition: background 0.3s var(--ease), transform 0.3s var(--ease);
+  }
+  .theme:hover .dot { background: var(--orange); border-color: var(--orange); transform: scale(1.15); }
+
+  :global([data-theme="dark"]) .theme .dot { background: var(--ink); }
+
+  @media (max-width: 640px) {
+    .brand { font-size: 0.85rem; letter-spacing: 0.1em; }
+    .nav-link { font-size: 0.75rem; letter-spacing: 0.08em; }
+    .links { gap: 0.9rem; }
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const btn = document.getElementById('theme-toggle');
+  btn?.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch {}
+  });
+</script>

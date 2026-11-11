@@ -1,0 +1,73 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PostRow from '../../components/PostRow.astro';
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+const groups = new Map<number, typeof posts>();
+for (const post of posts) {
+  const y = post.data.date.getFullYear();
+  if (!groups.has(y)) groups.set(y, []);
+  groups.get(y)!.push(post);
+}
+---
+
+<Base title="文章">
+  <section class="archive">
+    <div class="wrap">
+      <header class="head">
+        <p class="eyebrow">ARCHIVE</p>
+        <h1 class="display headline">文章</h1>
+        <p class="count">共 {posts.length} 篇</p>
+      </header>
+
+      {[...groups.entries()].map(([year, items]) => (
+        <section class="year">
+          <p class="year-label">{year}</p>
+          <div class="list">
+            {items.map((post, i) => (
+              <PostRow
+                href={`/posts/${post.id}/`}
+                title={post.data.title}
+                excerpt={post.data.excerpt}
+                date={post.data.date}
+                category={post.data.category}
+                readTime={post.data.readTime}
+                index={i + 1}
+              />
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .archive { padding: clamp(7rem, 15vh, 10rem) 0 4rem; }
+
+  .head { margin-bottom: clamp(3rem, 7vw, 5rem); }
+  .headline {
+    margin: 1rem 0 0;
+    font-size: clamp(2.2rem, 6vw, 3.6rem);
+  }
+  .count {
+    margin: 1rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--faint);
+  }
+
+  .year + .year { margin-top: clamp(3rem, 7vw, 5rem); }
+  .year-label {
+    margin: 0 0 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    color: var(--orange);
+  }
+</style>

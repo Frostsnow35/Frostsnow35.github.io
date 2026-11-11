@@ -1,0 +1,103 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  excerpt: string;
+  date: Date;
+  category: string;
+  readTime: number;
+  index: number;
+}
+const { href, title, excerpt, date, category, readTime, index } = Astro.props;
+
+const fmt = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+---
+
+<a class="row" href={href}>
+  <span class="idx">{String(index).padStart(2, '0')}</span>
+  <div class="body">
+    <h3 class="title display">{title}</h3>
+    <p class="excerpt">{excerpt}</p>
+    <p class="meta">
+      <time datetime={date.toISOString()}>{fmt(date)}</time>
+      <span class="dot">·</span>{category}
+      <span class="dot">·</span>{readTime} min
+    </p>
+  </div>
+</a>
+
+<style>
+  .row {
+    display: grid;
+    grid-template-columns: 3.2rem 1fr;
+    gap: clamp(0.6rem, 2vw, 1.6rem);
+    padding: clamp(1.7rem, 3.4vw, 2.6rem) 0;
+    position: relative;
+  }
+  .row::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--line);
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  .row:first-child::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .idx {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--faint);
+    padding-top: 0.55em;
+    transition: color 0.35s var(--ease), transform 0.35s var(--ease);
+  }
+
+  .body { min-width: 0; }
+
+  .title {
+    margin: 0;
+    font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+    line-height: 1.35;
+    transition: transform 0.42s var(--ease), color 0.42s var(--ease);
+  }
+
+  .excerpt {
+    margin: 0.55rem 0 0;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 34rem;
+  }
+
+  .meta {
+    margin: 0.85rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--faint);
+  }
+  .dot { margin: 0 0.55em; opacity: 0.6; }
+
+  .row:hover .title,
+  .row:focus-visible .title { transform: translateX(14px); }
+  .row:hover .idx,
+  .row:focus-visible .idx { color: var(--orange); transform: translateX(6px); }
+
+  @media (max-width: 560px) {
+    .row { grid-template-columns: 1fr; gap: 0.35rem; }
+    .idx { padding-top: 0; }
+  }
+</style>

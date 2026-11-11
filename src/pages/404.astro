@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="404">
+  <section class="nf">
+    <div class="wrap narrow">
+      <p class="eyebrow">404</p>
+      <h1 class="display headline">这里什么都没有</h1>
+      <p class="hint">页面可能被删了，或者从来没写过。</p>
+      <a class="link back" href="/">← 回到首页</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf { padding: clamp(9rem, 22vh, 14rem) 0 8rem; }
+  .narrow { max-width: 40rem; }
+  .headline { margin: 1rem 0 0; font-size: clamp(1.8rem, 5vw, 2.6rem); }
+  .hint { margin: 1.2rem 0 2.2rem; color: var(--muted); }
+  .back { font-size: 0.85rem; color: var(--muted); }
+</style>

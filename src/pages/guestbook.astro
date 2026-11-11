@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site.config';
+
+const ready = Boolean(site.giscus.repoId && site.giscus.categoryId);
+---
+
+<Base title="留言">
+  <section class="gb">
+    <div class="wrap narrow">
+      <p class="eyebrow">GUESTBOOK</p>
+      <h1 class="display headline">留言</h1>
+      <p class="intro">想说什么都行。用 GitHub 账号登录后即可写下。</p>
+
+      {ready ? (
+        <div class="giscus-wrap">
+          <script
+            src="https://giscus.app/client.js"
+            data-repo={site.giscus.repo}
+            data-repo-id={site.giscus.repoId}
+            data-category={site.giscus.category}
+            data-category-id={site.giscus.categoryId}
+            data-mapping={site.giscus.mapping}
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="top"
+            data-theme="light"
+            data-lang="zh-CN"
+            data-loading="lazy"
+            crossorigin="anonymous"
+            async
+          ></script>
+        </div>
+      ) : (
+        <p class="pending">
+          留言板已接入 giscus，等待填入仓库 ID。在 GitHub 仓库开启 Discussions 后，
+          到 giscus.app 生成 <code>repoId</code> 与 <code>categoryId</code>，
+          填进 <code>src/site.config.ts</code> 即可生效。
+        </p>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .gb { padding: clamp(7rem, 15vh, 10rem) 0 clamp(4rem, 10vh, 7rem); }
+  .narrow { max-width: 46rem; }
+  .headline {
+    margin: 1rem 0 0;
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
+  }
+  .intro {
+    margin: 1.4rem 0 clamp(2.6rem, 6vw, 3.6rem);
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .giscus-wrap { min-height: 12rem; }
+  .pending {
+    padding: 1.4rem 1.5rem;
+    background: var(--sea-wash);
+    font-size: 0.9rem;
+    line-height: 1.9;
+    color: var(--muted);
+  }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    color: var(--ink);
+  }
+</style>
+
+<script>
+  const giscus = document.querySelector('.giscus-wrap iframe') as HTMLIFrameElement | null;
+  const sync = () => {
+    const theme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+    const frame = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+    frame?.contentWindow?.postMessage(
+      { giscus: { setConfig: { theme } } },
+      'https://giscus.app'
+    );
+  };
+  new MutationObserver(sync).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme'],
+  });
+  window.addEventListener('message', (e) => {
+    if (e.origin !== 'https://giscus.app') return;
+    sync();
+  });
+</script>

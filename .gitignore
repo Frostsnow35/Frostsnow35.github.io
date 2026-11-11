@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+.fontwork/
+.shot-*.png
+.DS_Store
+*.log
+.env
