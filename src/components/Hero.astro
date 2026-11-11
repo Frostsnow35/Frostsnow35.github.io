@@ -21,6 +21,7 @@ import { site } from '../site.config';
   </div>
 
   <a class="scroll" href="#posts" aria-label="滚动进入文章列表">
+    <span class="scroll-hint">向下浏览</span>
     <svg width="14" height="18" viewBox="0 0 14 18" fill="none" aria-hidden="true">
       <path d="M7 1v14M2 10.5 7 15.5l5-5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
@@ -137,7 +138,7 @@ import { site } from '../site.config';
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.55rem;
+    gap: 0.7rem;
     color: var(--hero-dim);
     transform: translateX(-50%);
     transition: color 0.3s var(--ease);
@@ -145,6 +146,16 @@ import { site } from '../site.config';
   }
   .scroll:hover { color: var(--hero-ink); }
   .scroll svg { animation: nudge 2.4s ease-in-out infinite; }
+
+  .scroll-hint {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.24em;
+    text-indent: 0.24em;
+    color: var(--hero-mid);
+    animation: settle 1.5s var(--ease) 0.9s both;
+  }
+  .scroll:hover .scroll-hint { color: var(--hero-ink); }
 
   @keyframes settle {
     from { opacity: 0; transform: translateY(14px); }
@@ -164,21 +175,21 @@ import { site } from '../site.config';
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .center, .hero-title, .dash, .hero-tag { animation: none; }
+    .center, .hero-title, .dash, .hero-tag, .scroll-hint { animation: none; }
     .caret { display: none; }
   }
 </style>
 
 <script>
   // 节奏：名字打完 → 签名打 → 停留 → 签名先退 → 名字后退 → 间隔 → 循环
-  const NAME_TYPE = 108;
-  const NAME_DEL = 52;
-  const TAG_TYPE = 52;
-  const TAG_DEL = 26;
-  const HOLD = 2600;
-  const LINK = 340;
+  const NAME_TYPE = 72;
+  const NAME_DEL = 40;
+  const TAG_TYPE = 36;
+  const TAG_DEL = 20;
+  const HOLD = 5600;
+  const LINK = 260;
   const GAP = 520;
-  const START = 620;
+  const START = 420;
 
   let timer = 0;
 
@@ -213,7 +224,7 @@ import { site } from '../site.config';
         done();
         return;
       }
-      timer = window.setTimeout(tick, speed + Math.random() * 24);
+      timer = window.setTimeout(tick, speed + Math.random() * speed * 0.22);
     };
     timer = window.setTimeout(tick, speed);
   }

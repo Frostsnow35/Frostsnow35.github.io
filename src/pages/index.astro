@@ -16,6 +16,7 @@ const posts = (await getCollection('posts')).sort(
   <section id="posts" class="posts">
     <div class="wrap">
       <div class="head">
+        <h2 class="section-title display">文章</h2>
         <p class="count">{posts.length} 篇</p>
       </div>
 
@@ -58,6 +59,11 @@ const posts = (await getCollection('posts')).sort(
     justify-content: space-between;
     gap: 1rem;
     margin-bottom: clamp(1.4rem, 3vw, 2.2rem);
+  }
+  .section-title {
+    margin: 0;
+    font-size: clamp(1.9rem, 4.2vw, 2.7rem);
+    letter-spacing: 0.06em;
   }
   .count {
     margin: 0;
