@@ -13,7 +13,7 @@ const ready = Boolean(site.giscus.repoId && site.giscus.categoryId);
       <p class="intro">想说什么都行。用 GitHub 账号登录后即可写下。</p>
 
       {ready ? (
-        <div class="giscus-wrap">
+        <div class="giscus-wrap" id="giscus-wrap" data-repo={site.giscus.repo}>
           <script
             src="https://giscus.app/client.js"
             data-repo={site.giscus.repo}
@@ -32,13 +32,10 @@ const ready = Boolean(site.giscus.repoId && site.giscus.categoryId);
             async
           ></script>
         </div>
-      ) : (
-        <p class="pending">
-          留言板已接入 giscus，等待填入仓库 ID。在 GitHub 仓库开启 Discussions 后，
-          到 giscus.app 生成 <code>repoId</code> 与 <code>categoryId</code>，
-          填进 <code>src/site.config.ts</code> 即可生效。
-        </p>
-      )}
+      ) : null}
+      <p class="pending" id="gb-fallback" hidden>
+        留言板暂时不可用。可以直接写信：<a href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
     </div>
   </section>
 </Base>
@@ -71,7 +68,21 @@ const ready = Boolean(site.giscus.repoId && site.giscus.categoryId);
 </style>
 
 <script>
-  const giscus = document.querySelector('.giscus-wrap iframe') as HTMLIFrameElement | null;
+  // giscus 应用未安装到仓库时，客户端会抛出英文错误；此处探测后改为中文兜底
+  const wrap = document.getElementById('giscus-wrap');
+  const fallback = document.getElementById('gb-fallback');
+  if (wrap && fallback) {
+    fetch(`https://giscus.app/api/discussions/categories?repo=${encodeURIComponent(wrap.dataset.repo || '')}`)
+      .then((r) => r.json())
+      .then((d: { error?: string }) => {
+        if (d && d.error) {
+          wrap.hidden = true;
+          fallback.hidden = false;
+        }
+      })
+      .catch(() => {});
+  }
+
   const sync = () => {
     const theme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
     const frame = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
