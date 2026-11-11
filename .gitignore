@@ -3,6 +3,12 @@ dist/
 .astro/
 .fontwork/
 .shot-*.png
+.live-*.png
+.chk-*.png
+.v2-*.png
+.final-*.png
+.t-*.png
+.tmp-*
 .DS_Store
 *.log
 .env

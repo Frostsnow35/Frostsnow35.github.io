@@ -1,12 +1,11 @@
 ---
-import { site, nav } from '../site.config';
+import { nav } from '../site.config';
 const path = Astro.url.pathname;
 const isActive = (href: string) =>
   href === '/' ? path === '/' : path.startsWith(href);
 ---
 
 <header class="nav">
-  <a class="brand" href="/">{site.title}</a>
   <nav class="links" aria-label="主导航">
     {nav.map((item) => (
       <a
@@ -29,7 +28,7 @@ const isActive = (href: string) =>
     z-index: 50;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 1rem;
     padding: 1.35rem var(--gutter);
     color: var(--ink);
@@ -37,12 +36,6 @@ const isActive = (href: string) =>
     pointer-events: none;
   }
   .nav > * { pointer-events: auto; }
-
-  .brand {
-    font-family: var(--font-display);
-    font-size: 0.95rem;
-    letter-spacing: 0.14em;
-  }
 
   .links {
     display: flex;
@@ -91,7 +84,6 @@ const isActive = (href: string) =>
   :global([data-theme="dark"]) .theme .dot { background: var(--ink); }
 
   @media (max-width: 640px) {
-    .brand { font-size: 0.85rem; letter-spacing: 0.1em; }
     .nav-link { font-size: 0.75rem; letter-spacing: 0.08em; }
     .links { gap: 0.9rem; }
   }

@@ -149,9 +149,10 @@ import { site } from '../site.config';
       var pct = Math.round(volume * 100);
       rail.value = String(pct);
       rail.style.setProperty('--pct', pct + '%');
-      wrap.classList.toggle('muted', muted);
-      wrap.classList.toggle('playing', !muted);
-      btn.setAttribute('aria-pressed', String(!muted));
+      var audible = !muted && unlocked && !audio.paused;
+      wrap.classList.toggle('playing', audible);
+      wrap.classList.toggle('muted', !audible);
+      btn.setAttribute('aria-pressed', String(audible));
     }
 
     function fadeTo(target) {
@@ -165,24 +166,50 @@ import { site } from '../site.config';
       requestAnimationFrame(step);
     }
 
-    function unlock() {
-      if (unlocked) return;
-      unlocked = true;
-      if (muted) return;
+    function startSilent() {
+      audio.muted = true;
+      audio.volume = 0;
+      var p = audio.play();
+      if (p && p.then) p.catch(function () {});
+    }
+
+    // 先试带声自动播放：浏览器若判定本站有播放历史（MEI），会直接放行。
+    // 被拒时退回静音播放，等第一次真实手势再淡入。失败不做永久锁定，下次手势可重试。
+    var lastTry = 0;
+    function trySound() {
+      if (muted || unlocked) return;
+      var now = performance.now();
+      if (now - lastTry < 350) return;
+      lastTry = now;
       audio.muted = false;
       audio.volume = 0;
       var p = audio.play();
-      if (p && p.then) p.then(function () { fadeTo(volume); }).catch(function () {});
-      else fadeTo(volume);
+      if (!p || !p.then) {
+        unlocked = true;
+        fadeTo(volume);
+        paint();
+        return;
+      }
+      p.then(function () {
+        unlocked = true;
+        fadeTo(volume);
+        paint();
+      }).catch(function () {
+        if (audio.paused) startSilent();
+        paint();
+      });
     }
 
-    ['pointerdown', 'touchstart', 'keydown', 'wheel', 'scroll'].forEach(function (e) {
-      window.addEventListener(e, unlock, { once: true, passive: true });
+    ['pointerdown', 'touchstart', 'keydown', 'click', 'wheel', 'scroll'].forEach(function (e) {
+      window.addEventListener(e, trySound, { passive: true });
     });
 
-    audio.volume = muted ? 0 : volume;
-    audio.muted = true;
-    audio.play().catch(function () {});
+    if (muted) {
+      audio.muted = true;
+      audio.volume = 0;
+    } else {
+      trySound();
+    }
 
     btn.addEventListener('click', function (ev) {
       ev.stopPropagation();
