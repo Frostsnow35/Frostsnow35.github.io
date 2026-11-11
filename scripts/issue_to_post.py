@@ -5,6 +5,7 @@
     GH_TOKEN=xxx REPO=owner/name ISSUE=42 python scripts/issue_to_post.py
 
 规则
+  作者      -> 必须是仓库所有者本人（author_association == OWNER），否则拒绝
   title     -> 文章标题
   labels    -> 分类（`分类:技术` 取冒号后）与标签（其余标签）
   正文首行  -> 若形如 `slug: xxx` 则据此命名文件，否则用 issue-<编号>
@@ -38,6 +39,7 @@ ISSUE = os.environ.get("ISSUE") or ""
 
 SKIP_LABELS = {"发布", "已发布"}
 CATEGORY_PREFIX = "分类:"
+OWNER = REPO.split("/")[0].lower()
 
 IMG_MD = re.compile(r"!\[([^\]]*)\]\((https?://[^\s)]+)\)")
 IMG_HTML = re.compile(r'<img[^>]+src="(https?://[^"]+)"', re.I)
@@ -168,6 +170,17 @@ def main() -> int:
         return 1
 
     issue = api(f"/repos/{REPO}/issues/{ISSUE}")
+
+    # 双保险：工作流的 if 已经在事件层拦过一次，这里按 API 返回的身份再拦一次，
+    # 防止手动 workflow_dispatch 拿别人的 issue 编号发东西
+    if "pull_request" in issue:
+        print("这是 pull request，不是 issue，跳过")
+        return 0
+    login = (issue.get("user") or {}).get("login", "")
+    if issue.get("author_association") != "OWNER" or login.lower() != OWNER:
+        print(f"拒绝：issue 作者 {login}（{issue.get('author_association')}）不是仓库所有者 {OWNER}")
+        return 1
+
     labels = [l["name"] for l in issue.get("labels", [])]
     if not any(l in SKIP_LABELS or l == "发布" for l in labels):
         print("issue 未打「发布」标签，跳过")

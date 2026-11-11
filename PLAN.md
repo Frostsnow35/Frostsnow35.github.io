@@ -22,7 +22,6 @@
 | `/posts/<slug>/` | 文章 | 正文列宽 46rem |
 | `/about/` | 关于 | |
 | `/guestbook/` | 留言 | giscus |
-| `/admin/` | 后台 | `robots.txt` 已屏蔽 |
 | `/post/<slug>/` | 旧地址 | meta refresh + canonical 指向新地址 |
 
 旧站 `/home`、`/category`、`/tag`、`/treasure/*` 不做跳转，直接 404。
@@ -116,14 +115,16 @@ legacyId?: number     # 旧站主键，仅供追溯
 
 ## 六、写作链路
 
-`/admin/` 是纯前端页面，直连 GitHub REST API：
+发一篇 = 开一条 issue：
 
-1. 填一次 fine-grained PAT（只授权本仓库 `Contents: Read and write`），存本机 localStorage
-2. 选文件或新建，编辑 frontmatter 字段与 Markdown 正文
-3. 提交 = 一次 commit → Actions 构建 → 1–2 分钟上线
-4. 插图走 `public/images/`，自动插入 `![]()` 片段
+1. 标题即文章标题，正文即 Markdown，图片直接拖进编辑框
+2. 打 `发布` 标签（可选 `分类:技术` / `分类:随笔` 与自定义标签）
+3. `.github/workflows/publish.yml` 解析成 `src/content/posts/<slug>.md`、把图片下载进 `public/images/posts/<slug>/`，提交、构建、发布，然后回执并关闭 issue
+4. 改文章 = 编辑同一条 issue 正文再保存，按同一 slug 覆盖
 
-PAT 不落库、不上传，只在本浏览器。仓库里没有任何密钥。
+无后台页面、无 PAT、仓库里没有任何密钥。frontmatter 细节见 `README.md`。
+
+`/admin/` 已删除：它需要在本机存 fine-grained PAT，是一份长期有效的写权限凭据，而 issue 链路用的是仓库自带 token，权限由 GitHub 自己判定。
 
 ## 七、留言
 

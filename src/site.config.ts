@@ -29,15 +29,6 @@ export const site = {
     title: 'eikyuu hours',
     volume: 0.4,
   },
-
-  // 后台：纯前端直连 GitHub API，PAT 只存本机 localStorage
-  admin: {
-    owner: 'Frostsnow35',
-    repo: 'Frostsnow35.github.io',
-    branch: 'main',
-    postsDir: 'src/content/posts',
-    imagesDir: 'public/images',
-  },
 } as const;
 
 export const nav = [

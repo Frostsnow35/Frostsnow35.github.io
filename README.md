@@ -25,11 +25,11 @@ npm run build      # 产物在 dist/
 
 已发布的 issue 改完正文再存一次，会按同一 slug 覆盖原文件；想改文件名就在正文首行改 `slug`。
 
-备选：直接在 `src/content/posts/` 写 Markdown（frontmatter 见 `PLAN.md`），或用 `/admin/`（需要 fine-grained PAT）。
+备选：直接在 `src/content/posts/` 写 Markdown（frontmatter 见 `PLAN.md`），或按 issue 方式发（只有仓库所有者本人的 issue 会被发布，别人开的 issue 一律跳过）。
 
 ## 改站点信息
 
-`src/site.config.ts` 一个文件管全部：站名、副标题、邮箱、GitHub、giscus、音乐、后台仓库参数。
+`src/site.config.ts` 一个文件管全部：站名、副标题、邮箱、GitHub、Bilibili、旧站地址、giscus、音乐。
 
 ## 迁移与字体
 

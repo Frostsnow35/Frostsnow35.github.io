@@ -19,11 +19,14 @@ concurrency:
 
 jobs:
   publish:
-    # 只有仓库本人开的、且带「发布」标签的 issue 才会落到仓库里
+    # 只有仓库所有者本人开的、且带「发布」标签的 issue 才会落到仓库里。
+    # author_association == 'OWNER' 是 GitHub 自己判定的身份，改用户名或换账号都绕不过；
+    # workflow_dispatch 只有写权限者能触发，脚本里还会再核一次作者。
     if: >
       github.event_name == 'workflow_dispatch' ||
-      (contains(github.event.issue.labels.*.name, '发布') &&
-      github.event.issue.user.login == github.repository_owner)
+      (github.event.issue.user.login == github.repository_owner &&
+      github.event.issue.author_association == 'OWNER' &&
+      contains(github.event.issue.labels.*.name, '发布'))
     runs-on: ubuntu-latest
     outputs:
       changes: ${{ steps.commit.outputs.changes }}
