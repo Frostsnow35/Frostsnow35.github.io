@@ -25,7 +25,7 @@ import { site } from '../site.config';
     display: grid;
     place-items: center;
     background: var(--field);
-    color: #14161a;
+    color: var(--hero-ink);
     overflow: hidden;
   }
 
@@ -36,7 +36,7 @@ import { site } from '../site.config';
   }
 
   .hero-eyebrow {
-    color: rgba(20, 22, 26, 0.62);
+    color: var(--hero-dim);
     margin: 0 0 clamp(1rem, 3vw, 2.2rem);
     animation: settle 1.2s var(--ease) 0.1s both;
   }
@@ -54,7 +54,7 @@ import { site } from '../site.config';
     width: 3.5rem;
     height: 1px;
     margin: clamp(1.2rem, 3vw, 2.2rem) auto 0;
-    background: rgba(20, 22, 26, 0.42);
+    background: var(--hero-rule);
     transform-origin: center;
     animation: widen 1.4s var(--ease) 0.5s both;
   }
@@ -64,7 +64,7 @@ import { site } from '../site.config';
     font-family: var(--font-display);
     font-size: clamp(0.95rem, 1.5vw, 1.15rem);
     letter-spacing: 0.22em;
-    color: rgba(20, 22, 26, 0.74);
+    color: var(--hero-mid);
     animation: settle 1.3s var(--ease) 0.34s both;
   }
 
@@ -76,14 +76,14 @@ import { site } from '../site.config';
     flex-direction: column;
     align-items: center;
     gap: 0.55rem;
-    color: rgba(20, 22, 26, 0.62);
+    color: var(--hero-dim);
     font-size: 0.66rem;
     letter-spacing: 0.34em;
     transform: translateX(-50%);
     transition: color 0.3s var(--ease);
     will-change: transform;
   }
-  .scroll:hover { color: #14161a; }
+  .scroll:hover { color: var(--hero-ink); }
   .scroll svg { animation: nudge 2.4s ease-in-out infinite; }
 
   @keyframes settle {

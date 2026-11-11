@@ -19,6 +19,10 @@
   --sea-wash: rgba(60, 195, 232, 0.11);
   --sea-line: rgba(38, 150, 178, 0.28);
   --field: linear-gradient(101deg, #f5811f 0%, #f0a45e 26%, #cfd2bf 47%, #8fd4e3 70%, #3cc3e8 100%);
+  --hero-ink: #14161a;
+  --hero-dim: rgba(20, 22, 26, 0.62);
+  --hero-mid: rgba(20, 22, 26, 0.74);
+  --hero-rule: rgba(20, 22, 26, 0.42);
 
   --font-display: "Serif SC", "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", "Times New Roman", serif;
   --font-sans: "Inter", -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
@@ -41,6 +45,10 @@
   --sea-wash: rgba(63, 198, 234, 0.09);
   --sea-line: rgba(63, 198, 234, 0.26);
   --field: linear-gradient(101deg, #a84e0c 0%, #96682f 26%, #4b4f45 47%, #2c7d90 70%, #1c7a93 100%);
+  --hero-ink: #f4efe6;
+  --hero-dim: rgba(244, 239, 230, 0.66);
+  --hero-mid: rgba(244, 239, 230, 0.80);
+  --hero-rule: rgba(244, 239, 230, 0.46);
 }
 
 /* ---------- reset ---------- */
