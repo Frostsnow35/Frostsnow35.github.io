@@ -14,3 +14,14 @@ dist/
 .env
 .v3-*.png
 scripts/_probe*.mjs
+
+# 开发期资产：本地保留，不入库
+/PLAN.md
+/scripts/legacy-export/
+/scripts/migrate_legacy.py
+/scripts/build_font.py
+/scripts/build_og.py
+/scripts/shoot.mjs
+/scripts/check-timing.mjs
+/scripts/test-nav.mjs
+/scripts/test-persist.mjs
