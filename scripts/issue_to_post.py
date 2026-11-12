@@ -8,6 +8,7 @@
   作者      -> 必须是仓库所有者本人（author_association == OWNER），否则拒绝
   title     -> 文章标题
   labels    -> 分类（`分类:技术` 取冒号后）与标签（其余标签）
+  模板注释  -> 剥掉 HTML 注释（填写说明），不进文章
   正文首行  -> 若形如 `slug: xxx` 则据此命名文件，否则用 issue-<编号>
   正文图片  -> 下载到 public/images/posts/<slug>/ ，链接改写成本地路径
   date      -> issue 创建时间
@@ -44,6 +45,8 @@ OWNER = REPO.split("/")[0].lower()
 
 IMG_MD = re.compile(r"!\[([^\]]*)\]\((https?://[^\s)]+)\)")
 IMG_HTML = re.compile(r'<img[^>]+src="(https?://[^"]+)"', re.I)
+# issue 模板的填写说明写在 HTML 注释里，发布时整段剥掉
+HTML_COMMENT = re.compile(r"<!--.*?-->", re.S)
 # issue 里拖进去的图片会落在这些域名上
 MEDIA_HOSTS = {
     "github.com",
@@ -79,6 +82,11 @@ def api(path: str) -> dict:
     )
     with urllib.request.urlopen(req, timeout=30) as r:
         return json.loads(r.read().decode("utf-8"))
+
+
+def strip_comments(body: str) -> str:
+    """剥掉 issue 模板里的 HTML 注释，避免填写说明混进文章正文。"""
+    return HTML_COMMENT.sub("", body).strip()
 
 
 def slugify(text: str, fallback: str) -> str:
@@ -198,7 +206,7 @@ def main() -> int:
         return 0
 
     title = issue["title"].strip()
-    body = (issue.get("body") or "").strip()
+    body = strip_comments(issue.get("body") or "")
     # 写成东八区的裸时间（不带时区）：构建机在 UTC，带时区会被再转一次，
     # 凌晨写的文章就会显示成前一天
     created = datetime.fromisoformat(issue["created_at"].replace("Z", "+00:00"))
