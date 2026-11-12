@@ -21,6 +21,7 @@ import json
 import math
 import os
 import re
+import shutil
 import sys
 import urllib.error
 import urllib.request
@@ -164,6 +165,16 @@ def read_minutes(body: str) -> int:
     return max(1, math.ceil(minutes))
 
 
+def find_by_issue(number: str) -> Path | None:
+    """找出由这条 issue 生成的文章；手写稿没有 issue 字段，不会被匹配到。"""
+    for f in POSTS.glob("*.md"):
+        head = f.read_text(encoding="utf-8")[:400]
+        m = re.search(r"^issue:\s*(\d+)\s*$", head, re.M)
+        if m and m.group(1) == str(number):
+            return f
+    return None
+
+
 def main() -> int:
     if not ISSUE:
         print("缺少 ISSUE 环境变量")
@@ -195,15 +206,22 @@ def main() -> int:
 
     # 正文首行可选的 slug 指令
     slug = ""
+    explicit_slug = False
     first, _, rest = body.partition("\n")
     m = re.match(r"^slug:\s*(\S+)\s*$", first.strip(), re.I)
     if m:
         slug = slugify(m.group(1), "")
+        explicit_slug = True
         body = rest.lstrip("\n")
     if not slug:
         slug = slugify(title, "")
         if not slug or not re.search(r"[a-z0-9]", slug):
             slug = f"issue-{ISSUE}"
+
+    # 同一条 issue 认的是 issue 编号，不是标题：改了标题就换文件名会多出一篇文章
+    existing = find_by_issue(ISSUE)
+    if existing and not explicit_slug:
+        slug = existing.stem
 
     category = "随笔"
     tags: list[str] = []
@@ -214,6 +232,19 @@ def main() -> int:
             category = label[len(CATEGORY_PREFIX) :].strip() or category
         else:
             tags.append(label)
+
+    target = POSTS / f"{slug}.md"
+    if target.exists():
+        # 只允许同一条 issue 覆盖自己的稿子；否则改标题撞了 slug 会静默吃掉别的文章
+        head = target.read_text(encoding="utf-8")[:400]
+        m = re.search(r"^issue:\s*(\d+)\s*$", head, re.M)
+        if not m or m.group(1) != str(ISSUE):
+            owner = f"issue #{m.group(1)}" if m else "手写稿"
+            print(
+                f"拒绝：{target.relative_to(ROOT)} 已存在（{owner}）。"
+                f"请在正文首行改用别的 slug，例如 `slug: {slug}-2`"
+            )
+            return 1
 
     body = download_images(body, slug)
     excerpt = make_excerpt(body)
@@ -227,13 +258,25 @@ def main() -> int:
         "tags: [" + ", ".join(json.dumps(t, ensure_ascii=False) for t in tags) + "]",
         f"excerpt: {json.dumps(excerpt, ensure_ascii=False)}",
         f"readTime: {minutes}",
+        f"issue: {ISSUE}",
         "---",
         "",
     ]
 
     POSTS.mkdir(parents=True, exist_ok=True)
-    target = POSTS / f"{slug}.md"
     target.write_text("\n".join(fm) + body + "\n", encoding="utf-8")
+
+    # 显式改了 slug：把旧稿与旧图目录一起搬过去，别留下两份
+    if existing and existing != target:
+        old_media = MEDIA / existing.stem
+        new_media = MEDIA / slug
+        if old_media.exists():
+            new_media.parent.mkdir(parents=True, exist_ok=True)
+            if new_media.exists():
+                shutil.rmtree(new_media)
+            old_media.rename(new_media)
+        existing.unlink()
+        print(f"重命名 {existing.name} -> {target.name}")
     slug_file = os.environ.get("SLUG_FILE")
     if slug_file:
         Path(slug_file).write_text(slug, encoding="utf-8")

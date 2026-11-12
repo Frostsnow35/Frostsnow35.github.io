@@ -10,6 +10,8 @@ const posts = defineCollection({
     tags: z.array(z.string()).default([]),
     excerpt: z.string().default(''),
     readTime: z.number().default(5),
+    /** 由 issue 发布链路写入，用于判断同一篇稿子的重复发布 */
+    issue: z.number().optional(),
     legacyId: z.number().optional(),
   }),
 });

@@ -113,7 +113,6 @@ const isActive = (href: string) =>
 <script>
   // 事件委托：View Transitions 换页后按钮是新的，委托在 document 上不会失效
   const root = document.documentElement;
-  // 事件委托：View Transitions 换页后按钮是新的，委托在 document 上不会失效
   document.addEventListener('click', (e) => {
     const btn = (e.target as HTMLElement)?.closest?.('#theme-toggle');
     if (!btn) return;

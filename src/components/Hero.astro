@@ -5,7 +5,7 @@ import { site } from '../site.config';
 <section class="field">
   <div class="center">
     <h1 class="display hero-title" aria-label={site.title} data-type={site.title}>
-      <span class="ghost" aria-hidden="true">{site.title}</span>
+      <span class="ghost" aria-hidden="true" data-ghost={site.title}></span>
       <span class="typed" aria-hidden="true">
         <span class="typed-txt"></span><span class="caret"></span>
       </span>
@@ -13,7 +13,7 @@ import { site } from '../site.config';
     <span class="dash" aria-hidden="true"></span>
     <p class="hero-tag" data-type={site.tagline}>
       <span class="sr-only">{site.tagline}</span>
-      <span class="ghost" aria-hidden="true">{site.tagline}</span>
+      <span class="ghost" aria-hidden="true" data-ghost={site.tagline}></span>
       <span class="typed" aria-hidden="true">
         <span class="typed-txt"></span><span class="caret"></span>
       </span>
@@ -55,8 +55,10 @@ import { site } from '../site.config';
     animation: settle 1.5s var(--ease) 0.16s both;
   }
 
-  /* 隐形占位：保证打字过程中宽度固定，标题与签名都不会左右抖动 */
+  /* 隐形占位：保证打字过程中宽度固定，标题与签名都不会左右抖动。
+     文字走伪元素，不落进 textContent——否则 h1 里会出现两份标题文案 */
   .ghost { visibility: hidden; }
+  .ghost::before { content: attr(data-ghost); }
 
   .typed {
     position: absolute;

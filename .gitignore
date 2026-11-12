@@ -12,3 +12,5 @@ dist/
 .DS_Store
 *.log
 .env
+.v3-*.png
+scripts/_probe*.mjs
