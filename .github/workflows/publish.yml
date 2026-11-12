@@ -90,6 +90,17 @@ jobs:
           gh issue edit "$ISSUE" --repo "${{ github.repository }}" --add-label "已发布"
           gh issue close "$ISSUE" --repo "${{ github.repository }}"
 
+      - name: 失败回执
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ github.event.issue.number || inputs.issue }}
+        run: |
+          [ -n "$ISSUE" ] || exit 0
+          gh issue comment "$ISSUE" --repo "${{ github.repository }}" --body \
+            "发布失败，常见原因是 slug 与已有文章重名（正文首行写 \`slug: 别的名字\` 再试）。
+          日志：${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
   # 机器人用 GITHUB_TOKEN 提交的 push 不会触发 deploy.yml，
   # 所以这里自己构建并发布一次，否则文章要等下一次人工推送才上线
   deploy:
